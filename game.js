@@ -25,11 +25,20 @@ document.addEventListener("keyup", (e) => (keys[e.code] = false));
 
 // platforms
 let platforms = [
-  { x: 0, y: 350, w: 800, h: 50 }, // ground
-  { x: 200, y: 280, w: 100, h: 10 },
+  { x: 0, y: 350, w: 800, h: 50 },
+  { x: 200, y: 280, w: 120, h: 10 },
   { x: 400, y: 230, w: 120, h: 10 },
-  { x: 600, y: 180, w: 100, h: 10 }
+  { x: 600, y: 180, w: 120, h: 10 }
 ];
+
+// coins
+let coins = [
+  { x: 220, y: 250, collected: false },
+  { x: 420, y: 200, collected: false },
+  { x: 620, y: 150, collected: false }
+];
+
+let score = 0;
 
 function update() {
   // movement
@@ -49,7 +58,7 @@ function update() {
   player.x += player.dx;
   player.y += player.dy;
 
-  // collision with platforms
+  // collision
   player.grounded = false;
   platforms.forEach((p) => {
     if (
@@ -58,12 +67,25 @@ function update() {
       player.y < p.y + p.h &&
       player.y + player.height > p.y
     ) {
-      // landing
       if (player.dy >= 0) {
         player.y = p.y - player.height;
         player.dy = 0;
         player.grounded = true;
       }
+    }
+  });
+
+  // coin collection
+  coins.forEach((coin) => {
+    if (
+      !coin.collected &&
+      player.x < coin.x + 20 &&
+      player.x + player.width > coin.x &&
+      player.y < coin.y + 20 &&
+      player.y + player.height > coin.y
+    ) {
+      coin.collected = true;
+      score++;
     }
   });
 }
@@ -81,9 +103,24 @@ function draw() {
     ctx.fillRect(p.x, p.y, p.w, p.h);
   });
 
+  // coins
+  coins.forEach((coin) => {
+    if (!coin.collected) {
+      ctx.fillStyle = "yellow";
+      ctx.beginPath();
+      ctx.arc(coin.x, coin.y, 10, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+
   // player
   ctx.fillStyle = "red";
   ctx.fillRect(player.x, player.y, player.width, player.height);
+
+  // score
+  ctx.fillStyle = "black";
+  ctx.font = "20px monospace";
+  ctx.fillText("Score: " + score, 20, 30);
 }
 
 function gameLoop() {
