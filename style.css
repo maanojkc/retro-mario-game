@@ -1,10 +1,20 @@
 body {
+  margin: 0;
   background: black;
   color: white;
   text-align: center;
+  font-family: monospace;
+}
+
+.title {
+  margin-top: 20px;
+  letter-spacing: 3px;
+  font-size: 28px;
 }
 
 canvas {
-  background: #111;
+  display: block;
+  margin: 20px auto;
   border: 3px solid white;
+  box-shadow: 0 0 20px #00ffcc;
 }
